@@ -5,7 +5,11 @@
 
 library(reshape2)
 
-setwd("~/Dropbox/Study/Getting and Cleaning Data/week3")
+setwd("~/Dropbox/Study/Data Scientist's Toolbox/datasciencecoursera/Getting and Cleaning Data/week3")
+
+if ( !file.exists("UCI HAR Dataset")) {
+    unzip("UCI HAR Dataset.zip")
+}
 
 #   1. Merges the training and the test sets to create one data set.
 #
