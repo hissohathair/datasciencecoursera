@@ -3,6 +3,7 @@
 ## Peer-Reviewed Assignment (Week 3)
 
 The following files can be found in this directory
+* Features.md: Updated data dictionary.
 * README.md: This file.
 * run_analysis.R: Submission for course assignment (see below).
 * UCI HAR Dataset.zip: [Source data](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip) used by the analysis script.
