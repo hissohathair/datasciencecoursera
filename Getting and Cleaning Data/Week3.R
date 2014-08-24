@@ -71,7 +71,7 @@ print(Z)
 
 # Summarising data
 #
-setwd("~/Dropbox/Study/Getting and Cleaning Data/week3")
+setwd("~/Dropbox/Study/Data Scientist's Toolbox/datasciencecoursera/Getting and Cleaning Data/data")
 fileUrl <- "https://data.baltimorecity.gov/api/views/k5ry-ef3g/rows.csv?accessType=DOWNLOAD"
 if ( !file.exists("restaurants.csv")) { 
     download.file(fileUrl, destfile="restaurants.csv", method="curl")
