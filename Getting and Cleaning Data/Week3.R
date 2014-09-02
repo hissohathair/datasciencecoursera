@@ -108,7 +108,7 @@ data(UCBAdmissions)
 DF = as.data.frame(UCBAdmissions)
 summary(DF)
 
-xt <- xtabs(Freq ~ Gender + Admit,data=DF) # Frequency that males/females admitted/rejected
+xt <- xtabs(Freq ~ Gender + Admit, data=DF) # Frequency that males/females admitted/rejected
 xt
 
 # Flat tables

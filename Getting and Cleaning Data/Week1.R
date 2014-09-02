@@ -16,7 +16,7 @@ jsonUrl  <- "https://api.github.com/users/jtleek/repos"
 
 # Internal working variables
 #
-setwd("~/Dropbox/Study/Getting and Cleaning Data")
+setwd("~/Dropbox/Study/Data Scientist's Toolbox/datasciencecoursera/Getting and Cleaning Data")
 cacheDir <- "./data"
 if ( !file.exists(cacheDir) ) {
   dir.create(cacheDir)
