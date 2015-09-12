@@ -1,5 +1,5 @@
-# Week 1: Exploratory Data Analysis
-# ---------------------------------
+# ---- Week 1: Exploratory Data Analysis ----
+# 
 # Notes and code taken from R. Peng's lecture slides (Credit: https://class.coursera.org/exdata-006/)
 #
 # PM2.5 data sources
@@ -12,6 +12,8 @@
 
 setwd("~/Dropbox/Study/Data Science/datasciencecoursera/Exploratory Data Analysis/week1")
 
+# ---- Exploratory graphics ----
+#
 # Question: Are there any counties in the U.S. that exceed that national standard for fine particle pollution?
 #
 pollution <- read.csv("data/avgpm25.csv", colClasses = c("numeric", "character", 
@@ -24,9 +26,14 @@ summary(pollution$pm25)
 # Boxplot
 boxplot(pollution$pm25, col = "blue")
 
-# Histogram
-hist(pollution$pm25, col = "green")
+# Histogram 1
+hist(pollution$pm25, col = "green", breaks = 100)
 rug(pollution$pm25)
+
+# Histogram 2
+hist(pollution$pm25, col = "green")
+abline(v = 12, lwd = 12)
+abline(v = median(pollution$pm25), col = 'magenta', lwd = 4)
 
 # Overlaying Features
 boxplot(pollution$pm25, col = "blue")
@@ -35,7 +42,7 @@ abline(h = 12)
 # Barplot
 barplot(table(pollution$region), col = "wheat", main = "Number of Counties in Each Region")
 
-# Multiple Boxplots
+# Multiple Boxplots ("pm25 by region")
 boxplot(pm25 ~ region, data = pollution, col = "red")
 
 # Multiple Histograms
@@ -52,22 +59,39 @@ par(mfrow = c(1, 2), mar = c(5, 4, 2, 1))
 with(subset(pollution, region == "west"), plot(latitude, pm25, main = "West"))
 with(subset(pollution, region == "east"), plot(latitude, pm25, main = "East"))
 
+# ---- Plotting Systems in R ----
+#
 # Three plotting systems
 # 1. Base Plotting System: Original R system.
+# 2. Lattice
+# 3. GGPlot
 #
+
+# ---- Base Plotting System ----
+#
+# Graphics system in 'graphics' and 'grDevices'.
+#
+# Two phases:
+#    1. Initialise new plot
+#       - plot(x, y) or hist(x)
+#       - many paramaters that can be set and tweaked. See ?par
+#    2. Annotate existing plot
+# 
+
 library(datasets)
 data(cars)
 with(cars, plot(speed, dist))
 
 # Initialise plot - plot(x, y) or hist(x)
-#   pch: the plotting symbol (default is open circle)
+#   pch: the plotting character (ie symbol) (default is open circle)
 #   lty: the line type (default is solid line), can be dashed, etc
 #   lwd: the line width (integer)
 #   col: plotting color. See colors() for color names, or use integer or hex code.
 #   xlab: x-axis label
 #   ylab: y-axis label
 #
-# See also: ?par, which sets global graphics parameters that affect all plots
+# See also: par() function, which sets global graphics parameters that affect 
+# all plots. Can also be specified in plotting functions.
 #   las: Orientation of axis labels
 #   bg: background color
 #   mar: margin size
@@ -82,6 +106,7 @@ boxplot(Ozone ~ Month, airquality, xlab = "Month", ylab = "Ozone (ppb)")
 airquality <- transform(airquality, Month = factor(Month))
 boxplot(Ozone ~ Month, airquality, xlab = "Month", ylab = "Ozone (ppb)")
 
+par("lty"); par("col")
 par("bg"); par("mar"); par("mfrow")
 
 # Annotate (add to) an existing plot
@@ -96,6 +121,7 @@ par("bg"); par("mar"); par("mfrow")
 # axis: adding axis ticks/labels
 
 # Plot with annotation (title)
+?with
 with(airquality, plot(Wind, Ozone))
 title(main = "Ozone and Wind in New York City")  ## Add a title
 
@@ -113,7 +139,7 @@ legend("topright", pch = 1, col = c("blue", "red"), legend = c("May", "Other Mon
 # Base plot with regression line
 with(airquality, plot(Wind, Ozone, main = "Ozone and Wind in New York City", 
                       pch = 20))
-model <- lm(Ozone ~ Wind, airquality)
+model <- lm(Ozone ~ Wind, airquality)  # linear model (lm)
 abline(model, lwd = 2)
 
 # Multiple Base Plots
@@ -132,7 +158,8 @@ with(airquality, {
     mtext("Ozone and Weather in New York City", outer = TRUE)
 })
 
-# Demo
+# ---- Base Plotting Demonstration ----
+#
 par(mfrow = c(1,1))
 x <- rnorm(100)
 hist(x)
@@ -145,7 +172,16 @@ plot(x, y)
 plot(x, y, pch = 20)  # solid dots
 plot(x, y, pch = 19)  # fat dots
 plot(x, y, pch = 2)   # triangles
-# See also: example(points); pchShow()
+
+# See also: 
+example(points)
+pchShow()
+pchShow(c("o", "O", "0"), cex = 2.5)
+
+# Example continued...
+x <- rnorm(100)
+y <- rnorm(100)
+plot(x, y, pch=20)
 title("Scatterplot")
 text(-2, -2, "Label") # x,y refers to plot co-ords
 legend("topleft", legend = "Data", pch = 2)
@@ -167,10 +203,11 @@ plot(x, z, pch = 19)
 # Four plots
 par(mfrow = c(2, 2), mar = c(2, 2, 1, 1))
 #par(mfcol = c(2, 2), mar = c(2, 2, 1, 1))
-plot(x, y)
-plot(x, z)
-plot(z, x)
-plot(y, x)
+plot(x, y) # upper left
+plot(x, z) # upper right
+plot(z, x) # lower left
+plot(y, x) # lower right
+# if you use mfcol instead of mfrow, plots go in different order
 
 # Adding labels
 par(mfrow = c(1, 1), mar = c(4, 4, 2, 2))
@@ -178,14 +215,16 @@ x <- rnorm(100)
 y <- x + rnorm(100)
 g <- gl(2, 50, labels = c("Male", "Female"))
 plot(x, y, type = "n")  # make the plot, but don't show the data
-points(x[g == "Male"], y[g == "Male"], col = "green", pch = 3)
-points(x[g == "Female"], y[g == "Female"], col = "blue", pch = 4)
+points(x[g == "Male"], y[g == "Male"], col = "blue", pch = 20)
+points(x[g == "Female"], y[g == "Female"], col = "pink", pch = 19)
 fit <- lm(x ~ y)
 abline(fit)
 
 
+# ---- Lattice ----
+#
 # 2. The Lattice System: Plots are created with single function call.
-#   - Useful for conditioning plots
+#   - Useful for conditioning plots (how y changes with x across levels of z)
 #   - Can be awkward to specify an entire plot in a single function call
 #   - Can't add to the plot once it's done
 #
@@ -193,6 +232,9 @@ library(lattice)
 state <- data.frame(state.x77, region = state.region)
 xyplot(Life.Exp ~ Income | region, data = state, layout = c(4,1))
 
+
+# ---- GGPlot ----
+#
 # 3. The ggplot2 System
 #   - Grammar for implementing plots
 #   - Allows additions and annotations
@@ -207,7 +249,7 @@ qplot(displ, hwy, data = mpg)
 
 
 
-# Graphics Devices
+# ---- Graphics Devices ----
 #
 # A graphics device is something where you can make a plot appear
 #   - A window on your computer (screen device)
@@ -226,8 +268,8 @@ with(faithful, plot(eruptions, waiting))  ## Make plot appear on screen device
 title(main = "Old Faithful Geyser data")  ## Annotate with a title
 
 # Plotting to file
-setwd("~/Desktop")
-pdf(file = "myplot.pdf")  ## Open PDF device; create 'myplot.pdf' in my working directory
+##setwd("~/Desktop")
+pdf(file = "~/Desktop/myplot.pdf")  ## Open PDF device; create 'myplot.pdf' in my working directory
 with(faithful, plot(eruptions, waiting))
 title(main = "Old Faithful Geyser data") 
 dev.off()  ## Close the PDF file device
@@ -251,7 +293,11 @@ dev.off()  ## Close the PDF file device
 # Can plot to multiple devices. Plotting can only occur on one graphics device at a time.
 # The currently active graphics device can be found by calling dev.cur()
 # You can change the active graphics device with dev.set(<integer>).
-#
+
+dev.cur()
+dev.list()
+dev.set(2)
+
 # Can copy plots
 #   - dev.copy: copy a plot from one device to another
 #   - dev.copy2pdf: specifically copy a plot to a PDF file
@@ -259,5 +305,5 @@ dev.off()  ## Close the PDF file device
 library(datasets)
 with(faithful, plot(eruptions, waiting))
 title(main = "Old Faithful Geyser data")
-dev.copy(png, file = "geyserplot.png")  ## Copy my plot to a PNG file
+dev.copy(png, file = "~/Desktop/geyserplot.png")  ## Copy my plot to a PNG file
 dev.off()  ## Don't forget to close the PNG device!
