@@ -96,7 +96,7 @@ if ( !exists("baltimore_sources")) {
 plotFile <- "plot3.png"
 g <- ggplot(data=baltimore_sources, aes(year, emissions))
 g <- g + geom_point() + geom_line() + facet_grid(. ~ type) + geom_smooth(method="lm")
-ggsave(plotFile, g, width=20, height=9, units="cm")
+ggsave(plotFile, g, width=4, height=3, scale=1.8, dpi=100)
 
 
 # Question 4: Across the United States, how have emissions from coal 
@@ -119,7 +119,7 @@ if ( !exists("coal_emissions")) {
 plotFile <- "plot4.png"
 g <- ggplot(data=coal_emissions, aes(year, emissions))
 g <- g + geom_point() + geom_line() + geom_smooth(method="lm", se=FALSE) + ggtitle("Coal Emissions of PM2.5 by Year")
-ggsave(plotFile, g, width=12, height=9, units="cm")
+ggsave(plotFile, g, width=4, height=3, scale=1.8, dpi=100)
 
 
 # Question 5: How have emissions from motor vehicle sources changed from 
@@ -146,7 +146,7 @@ if ( !exists("vehicle_emissions_baltimore")) {
 plotFile <- "plot5.png"
 g <- ggplot(data=vehicle_emissions_baltimore, aes(year, emissions))
 g <- g + geom_point() + geom_line() + geom_smooth(method="lm", se=FALSE) + ggtitle("Vehicle Emissions in Baltimore by Year")
-ggsave(plotFile, g, width=12, height=9, units="cm")
+ggsave(plotFile, g, width=4, height=3, scale=1.8, dpi=100)
 
 
 # Question 6: Compare emissions from motor vehicle sources in Baltimore City 
@@ -175,5 +175,5 @@ if ( !exists("vehicle_emissions_baltimore_vs_LA")) {
 plotFile <- "plot6.png"
 g <- ggplot(data=vehicle_emissions_baltimore_vs_LA, aes(year, emissions))
 g <- g + geom_point() + geom_line() + facet_grid(. ~ fips) + geom_smooth(method="lm") + ggtitle("Vehicle Emissions in LA (06037) vs Baltimore (24510)")
-ggsave(plotFile, g, width=12, height=9, units="cm", scale=1.2)
+ggsave(plotFile, g, width=4, height=3, scale=1.8, dpi=100)
 
