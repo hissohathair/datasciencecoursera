@@ -21,9 +21,11 @@ if ( !exists("NEI") || !exists("SCC")) {
 # 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 
 # emission from all sources for each of the years 1999, 2002, 2005, and 2008.
 
-# Calculate the total for each year
+# Calculate the total for each year.
+# Useful: http://davetang.org/muse/2013/05/22/using-aggregate-and-apply-in-r/
+years <- unique(NEI$year)
 if ( !exists("pm25_by_year")) {
-  pm25_by_year <- aggregate(NEI$Emissions, by=list(NEI$year), FUN=sum)
+  pm25_by_year <- aggregate(NEI$Emissions, by=list(years), FUN=sum, na.rm=TRUE)
   names(pm25_by_year) <- c("year", "total_pm25")
 }
 
